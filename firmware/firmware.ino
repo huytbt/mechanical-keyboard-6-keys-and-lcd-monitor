@@ -23,6 +23,7 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 #include <Keyboard.h>
+#include <Mouse.h>
 
 #define SCREEN_WIDTH 128 // OLED display width, in pixels
 #define SCREEN_HEIGHT 32 // OLED display height, in pixels
@@ -46,6 +47,7 @@ const int buttonPin6 = 6;
 #define MODE_DEFAULT 1
 #define MODE_GAME 2
 #define MODE_INFO 3
+#define MODE_MOUSE 4
 int mode = MODE_DEFAULT;
 
 int currentDogFrame = 1;
@@ -321,6 +323,12 @@ void drawDogAnimation() {
       display.println("Phone Addr");
       display.println("Home  End");
       break;
+    case MODE_MOUSE:
+      display.println("Mouse Mode");
+      display.println("Left  Press");
+      display.println("Down  Up");
+      display.println("Right Fn");
+      break;
   }
 
   display.display();
@@ -347,6 +355,7 @@ void setup() {
   pinMode(buttonPin5, INPUT);
   pinMode(buttonPin6, INPUT);
   Keyboard.begin();
+  Mouse.begin();
 
   Serial.begin(9600);
 
@@ -372,16 +381,25 @@ void loop() {
   if (buttonState5 == HIGH && buttonState6 == HIGH && buttonState1 == HIGH) {
     mode = MODE_DEFAULT;
     drawDogAnimation();
+    releaseKeys();
     return;
   }
   if (buttonState5 == HIGH && buttonState6 == HIGH && buttonState2 == HIGH) {
     mode = MODE_GAME;
     drawDogAnimation();
+    releaseKeys();
     return;
   }
   if (buttonState5 == HIGH && buttonState6 == HIGH && buttonState3 == HIGH) {
     mode = MODE_INFO;
     drawDogAnimation();
+    releaseKeys();
+    return;
+  }
+  if (buttonState5 == HIGH && buttonState6 == HIGH && buttonState4 == HIGH) {
+    mode = MODE_MOUSE;
+    drawDogAnimation();
+    releaseKeys();
     return;
   }
 
@@ -395,7 +413,19 @@ void loop() {
     case MODE_INFO:
       keyInfoMode(buttonState1, buttonState2, buttonState3, buttonState4, buttonState5, buttonState6);
       break;
+    case MODE_MOUSE:
+      keyMouseMode(buttonState1, buttonState2, buttonState3, buttonState4, buttonState5, buttonState6);
+      break;
   }
+}
+
+void releaseKeys() {
+  Keyboard.release(KEY_ESC);
+  Keyboard.release(KEY_HOME);
+  Keyboard.release(KEY_END);
+  Keyboard.release(KEY_RIGHT_ARROW);
+  Keyboard.release(KEY_DOWN_ARROW);
+  Keyboard.release(KEY_UP_ARROW);
 }
 
 void keyDefaultMode(int buttonState1, int buttonState2, int buttonState3, int buttonState4, int buttonState5, int buttonState6) {
@@ -531,4 +561,69 @@ void keyInfoMode(int buttonState1, int buttonState2, int buttonState3, int butto
   } else {
     Keyboard.release(KEY_END);
   }
+}
+
+int mouseAcceleration = 0;
+void keyMouseMode(int buttonState1, int buttonState2, int buttonState3, int buttonState4, int buttonState5, int buttonState6) {
+  bool hasPressed = false;
+  int mouseX = 0;
+  int mouseY = 0;
+
+  if (buttonState1 == HIGH) {
+    mouseX = -1 * mouseAcceleration;
+    hasPressed = true;
+  }
+
+  int mousePress = MOUSE_LEFT;
+  if (buttonState6 == HIGH) {
+    drawDogAnimation();
+    mousePress = MOUSE_RIGHT;
+  }
+
+  if (buttonState2 == HIGH) {
+    if (!Mouse.isPressed(mousePress)) {
+      Mouse.press(mousePress);
+    }
+    hasPressed = true;
+  } else {
+    if (Mouse.isPressed(mousePress)) {
+      Mouse.release(mousePress);
+    }
+  }
+
+  if (buttonState3 == HIGH) {
+    if (buttonState6 == HIGH) {
+      Mouse.move(0, 0, 1);
+    } else {
+      mouseY = 1 * mouseAcceleration;
+    }
+    hasPressed = true;
+  }
+
+  if (buttonState4 == HIGH) {
+    if (buttonState6 == HIGH) {
+      Mouse.move(0, 0, -1);
+    } else {
+      mouseY = -1 * mouseAcceleration;
+    }
+    hasPressed = true;
+  }
+
+  if (buttonState5 == HIGH) {
+    mouseX = 1 * mouseAcceleration;
+    hasPressed = true;
+  }
+
+  if (!hasPressed) {
+    mouseAcceleration = 0;
+  } else if (mouseAcceleration < 15) {
+    mouseAcceleration++;
+  }
+
+  if (hasPressed) {
+    Mouse.move(mouseX, mouseY, 0);
+    drawDogAnimation();
+  }
+
+  delay(5);
 }
