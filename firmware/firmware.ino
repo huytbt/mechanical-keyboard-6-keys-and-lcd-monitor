@@ -43,6 +43,8 @@ const int buttonPin3 = 8;
 const int buttonPin5 = 7;
 const int buttonPin6 = 6;
 
+int currentDogFrame = 1;
+
 const unsigned char DogFrame1 [] PROGMEM = {
   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
@@ -273,30 +275,6 @@ const unsigned char DogFrame10 [] PROGMEM = {
   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
 
-
-void setup() {
-  pinMode(buttonPin1, INPUT);
-  pinMode(buttonPin2, INPUT);
-  pinMode(buttonPin3, INPUT);
-  pinMode(buttonPin4, INPUT);
-  pinMode(buttonPin5, INPUT);
-  pinMode(buttonPin6, INPUT);
-  Keyboard.begin();
-
-  Serial.begin(9600);
-
-  display.setRotation(2);
-
-  // SSD1306_SWITCHCAPVCC = generate display voltage from 3.3V internally
-  if(!display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS)) {
-    Serial.println(F("SSD1306 allocation failed"));
-    for(;;); // Don't proceed, loop forever
-  }
-
-  drawDogAnimation("Hello");
-}
-
-int currentDogFrame = 1;
 void drawDogAnimation(char *text) {
   currentDogFrame++;
   if (currentDogFrame > 10) {
@@ -332,6 +310,28 @@ void drawDogAnimation(char *text) {
 #define KEY_END           0xD5
 #define KEY_INSERT        0xD1
 #define KEY_DELETE        0xD4
+
+void setup() {
+  pinMode(buttonPin1, INPUT);
+  pinMode(buttonPin2, INPUT);
+  pinMode(buttonPin3, INPUT);
+  pinMode(buttonPin4, INPUT);
+  pinMode(buttonPin5, INPUT);
+  pinMode(buttonPin6, INPUT);
+  Keyboard.begin();
+
+  Serial.begin(9600);
+
+  display.setRotation(2);
+
+  // SSD1306_SWITCHCAPVCC = generate display voltage from 3.3V internally
+  if(!display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS)) {
+    Serial.println(F("SSD1306 allocation failed"));
+    for(;;); // Don't proceed, loop forever
+  }
+
+  drawDogAnimation("Hello");
+}
 
 void loop() {
   int buttonState1 = digitalRead(buttonPin1);
