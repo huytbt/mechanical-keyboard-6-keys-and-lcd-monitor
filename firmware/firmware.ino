@@ -42,7 +42,6 @@ const int buttonPin4 = 5;
 const int buttonPin3 = 8;
 const int buttonPin5 = 7;
 const int buttonPin6 = 6;
-int currentFrame = 1;
 
 const unsigned char Frame1 [] PROGMEM = {
   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
@@ -294,16 +293,17 @@ void setup() {
     for(;;); // Don't proceed, loop forever
   }
 
-  drawAnimate("Hello");
+  drawDogAnimation("Hello");
 }
 
-void drawAnimate(char *text) {
-  currentFrame++;
-  if (currentFrame > 10) {
-    currentFrame = 1;
+int currentDogFrame = 1;
+void drawDogAnimation(char *text) {
+  currentDogFrame++;
+  if (currentDogFrame > 10) {
+    currentDogFrame = 1;
   }
   display.clearDisplay();
-  switch (currentFrame) {
+  switch (currentDogFrame) {
     case 1: display.drawBitmap(30, 0, Frame1, 80, 32, 1); break;
     case 2: display.drawBitmap(30, 0, Frame2, 80, 32, 1); break;
     case 3: display.drawBitmap(30, 0, Frame3, 80, 32, 1); break;
@@ -320,7 +320,7 @@ void drawAnimate(char *text) {
   display.setTextColor(SSD1306_WHITE);        // Draw white text
   display.setCursor(0,0);             // Start at top-left corner
   display.println(text);
-  
+
   display.display();
 }
 
@@ -337,7 +337,7 @@ void loop() {
   int buttonState1 = digitalRead(buttonPin1);
   if (buttonState1 == HIGH) {
     Keyboard.press(KEY_ESC);
-    drawAnimate("Esc");
+    drawDogAnimation("Esc");
   } else {
     Keyboard.release(KEY_ESC);
   }
@@ -347,7 +347,7 @@ void loop() {
     Keyboard.press(KEY_RIGHT_GUI);
     Keyboard.press(KEY_RIGHT_SHIFT);
     Keyboard.write('5');
-    drawAnimate("Print\nScreen");
+    drawDogAnimation("Print\nScreen");
   } else {
     Keyboard.release(KEY_RIGHT_GUI);
     Keyboard.release(KEY_RIGHT_SHIFT);
@@ -356,7 +356,7 @@ void loop() {
   int buttonState3 = digitalRead(buttonPin3);
   if (buttonState3 == HIGH) {
     Keyboard.press(KEY_INSERT);
-    drawAnimate("Insert");
+    drawDogAnimation("Insert");
   } else {
     Keyboard.release(KEY_INSERT);
   }
@@ -364,7 +364,7 @@ void loop() {
   int buttonState4 = digitalRead(buttonPin4);
   if (buttonState4 == HIGH) {
     Keyboard.press(KEY_DELETE);
-    drawAnimate("Delete");
+    drawDogAnimation("Delete");
   } else {
     Keyboard.release(KEY_DELETE);
   }
@@ -372,7 +372,7 @@ void loop() {
   int buttonState5 = digitalRead(buttonPin5);
   if (buttonState5 == HIGH) {
     Keyboard.press(KEY_HOME);
-    drawAnimate("Home");
+    drawDogAnimation("Home");
   } else {
     Keyboard.release(KEY_HOME);
   }
@@ -380,7 +380,7 @@ void loop() {
   int buttonState6 = digitalRead(buttonPin6);
   if (buttonState6 == HIGH) {
     Keyboard.press(KEY_END);
-    drawAnimate("End");
+    drawDogAnimation("End");
   } else {
     Keyboard.release(KEY_END);
   }
