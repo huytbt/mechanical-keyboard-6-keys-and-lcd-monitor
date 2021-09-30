@@ -43,6 +43,11 @@ const int buttonPin3 = 8;
 const int buttonPin5 = 7;
 const int buttonPin6 = 6;
 
+#define MODE_DEFAULT 1
+#define MODE_GAME 2
+#define MODE_INFO 3
+int mode = MODE_DEFAULT;
+
 int currentDogFrame = 1;
 
 const unsigned char DogFrame1 [] PROGMEM = {
@@ -275,29 +280,48 @@ const unsigned char DogFrame10 [] PROGMEM = {
   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
 
-void drawDogAnimation(char *text) {
+void drawDogAnimation() {
   currentDogFrame++;
   if (currentDogFrame > 10) {
     currentDogFrame = 1;
   }
   display.clearDisplay();
   switch (currentDogFrame) {
-    case 1: display.drawBitmap(30, 0, DogFrame1, 80, 32, 1); break;
-    case 2: display.drawBitmap(30, 0, DogFrame2, 80, 32, 1); break;
-    case 3: display.drawBitmap(30, 0, DogFrame3, 80, 32, 1); break;
-    case 4: display.drawBitmap(30, 0, DogFrame4, 80, 32, 1); break;
-    case 5: display.drawBitmap(30, 0, DogFrame5, 80, 32, 1); break;
-    case 6: display.drawBitmap(30, 0, DogFrame6, 80, 32, 1); break;
-    case 7: display.drawBitmap(30, 0, DogFrame7, 80, 32, 1); break;
-    case 8: display.drawBitmap(30, 0, DogFrame8, 80, 32, 1); break;
-    case 9: display.drawBitmap(30, 0, DogFrame9, 80, 32, 1); break;
-    case 10: display.drawBitmap(30, 0, DogFrame10, 80, 32, 1); break;
+    case 1: display.drawBitmap(55, 0, DogFrame1, 80, 32, 1); break;
+    case 2: display.drawBitmap(55, 0, DogFrame2, 80, 32, 1); break;
+    case 3: display.drawBitmap(55, 0, DogFrame3, 80, 32, 1); break;
+    case 4: display.drawBitmap(55, 0, DogFrame4, 80, 32, 1); break;
+    case 5: display.drawBitmap(55, 0, DogFrame5, 80, 32, 1); break;
+    case 6: display.drawBitmap(55, 0, DogFrame6, 80, 32, 1); break;
+    case 7: display.drawBitmap(55, 0, DogFrame7, 80, 32, 1); break;
+    case 8: display.drawBitmap(55, 0, DogFrame8, 80, 32, 1); break;
+    case 9: display.drawBitmap(55, 0, DogFrame9, 80, 32, 1); break;
+    case 10: display.drawBitmap(55, 0, DogFrame10, 80, 32, 1); break;
   }
 
   display.setTextSize(1);             // Normal 1:1 pixel scale
   display.setTextColor(SSD1306_WHITE);        // Draw white text
   display.setCursor(0,0);             // Start at top-left corner
-  display.println(text);
+  switch (mode) {
+    case MODE_DEFAULT:
+      display.println("Default");
+      display.println("Esc  PrtSc");
+      display.println("Ins  Del");
+      display.println("Home End");
+      break;
+    case MODE_GAME:
+      display.println("Game Mode");
+      display.println("Left  Home");
+      display.println("Down  Up");
+      display.println("Right End");
+      break;
+    case MODE_INFO:
+      display.println("Info Mode");
+      display.println("Name  Email");
+      display.println("Phone Addr");
+      display.println("Home  End");
+      break;
+  }
 
   display.display();
 }
@@ -310,6 +334,10 @@ void drawDogAnimation(char *text) {
 #define KEY_END           0xD5
 #define KEY_INSERT        0xD1
 #define KEY_DELETE        0xD4
+#define KEY_UP_ARROW      0xDA
+#define KEY_DOWN_ARROW    0xD9
+#define KEY_LEFT_ARROW    0xD8
+#define KEY_RIGHT_ARROW   0xD7
 
 void setup() {
   pinMode(buttonPin1, INPUT);
@@ -330,57 +358,176 @@ void setup() {
     for(;;); // Don't proceed, loop forever
   }
 
-  drawDogAnimation("Hello");
+  drawDogAnimation();
 }
 
 void loop() {
   int buttonState1 = digitalRead(buttonPin1);
+  int buttonState2 = digitalRead(buttonPin2);
+  int buttonState3 = digitalRead(buttonPin3);
+  int buttonState4 = digitalRead(buttonPin4);
+  int buttonState5 = digitalRead(buttonPin5);
+  int buttonState6 = digitalRead(buttonPin6);
+
+  if (buttonState5 == HIGH && buttonState6 == HIGH && buttonState1 == HIGH) {
+    mode = MODE_DEFAULT;
+    drawDogAnimation();
+    return;
+  }
+  if (buttonState5 == HIGH && buttonState6 == HIGH && buttonState2 == HIGH) {
+    mode = MODE_GAME;
+    drawDogAnimation();
+    return;
+  }
+  if (buttonState5 == HIGH && buttonState6 == HIGH && buttonState3 == HIGH) {
+    mode = MODE_INFO;
+    drawDogAnimation();
+    return;
+  }
+
+  switch (mode) {
+    case MODE_DEFAULT:
+      keyDefaultMode(buttonState1, buttonState2, buttonState3, buttonState4, buttonState5, buttonState6);
+      break;
+    case MODE_GAME:
+      keyGameMode(buttonState1, buttonState2, buttonState3, buttonState4, buttonState5, buttonState6);
+      break;
+    case MODE_INFO:
+      keyInfoMode(buttonState1, buttonState2, buttonState3, buttonState4, buttonState5, buttonState6);
+      break;
+  }
+}
+
+void keyDefaultMode(int buttonState1, int buttonState2, int buttonState3, int buttonState4, int buttonState5, int buttonState6) {
   if (buttonState1 == HIGH) {
     Keyboard.press(KEY_ESC);
-    drawDogAnimation("Esc");
+    drawDogAnimation();
   } else {
     Keyboard.release(KEY_ESC);
   }
 
-  int buttonState2 = digitalRead(buttonPin2);
   if (buttonState2 == HIGH) {
     Keyboard.press(KEY_RIGHT_GUI);
     Keyboard.press(KEY_RIGHT_SHIFT);
     Keyboard.write('5');
-    drawDogAnimation("Print\nScreen");
+    drawDogAnimation();
   } else {
     Keyboard.release(KEY_RIGHT_GUI);
     Keyboard.release(KEY_RIGHT_SHIFT);
   }
 
-  int buttonState3 = digitalRead(buttonPin3);
   if (buttonState3 == HIGH) {
     Keyboard.press(KEY_INSERT);
-    drawDogAnimation("Insert");
+    drawDogAnimation();
   } else {
     Keyboard.release(KEY_INSERT);
   }
 
-  int buttonState4 = digitalRead(buttonPin4);
   if (buttonState4 == HIGH) {
     Keyboard.press(KEY_DELETE);
-    drawDogAnimation("Delete");
+    drawDogAnimation();
   } else {
     Keyboard.release(KEY_DELETE);
   }
 
-  int buttonState5 = digitalRead(buttonPin5);
   if (buttonState5 == HIGH) {
     Keyboard.press(KEY_HOME);
-    drawDogAnimation("Home");
+    drawDogAnimation();
   } else {
     Keyboard.release(KEY_HOME);
   }
 
-  int buttonState6 = digitalRead(buttonPin6);
   if (buttonState6 == HIGH) {
     Keyboard.press(KEY_END);
-    drawDogAnimation("End");
+    drawDogAnimation();
+  } else {
+    Keyboard.release(KEY_END);
+  }
+}
+
+void keyGameMode(int buttonState1, int buttonState2, int buttonState3, int buttonState4, int buttonState5, int buttonState6) {
+  if (buttonState1 == HIGH) {
+    Keyboard.press(KEY_LEFT_ARROW);
+    drawDogAnimation();
+  } else {
+    Keyboard.release(KEY_LEFT_ARROW);
+  }
+
+  if (buttonState2 == HIGH) {
+    Keyboard.press(KEY_HOME);
+    drawDogAnimation();
+  } else {
+    Keyboard.release(KEY_HOME);
+  }
+
+  if (buttonState3 == HIGH) {
+    Keyboard.press(KEY_DOWN_ARROW);
+    drawDogAnimation();
+  } else {
+    Keyboard.release(KEY_DOWN_ARROW);
+  }
+
+  if (buttonState4 == HIGH) {
+    Keyboard.press(KEY_UP_ARROW);
+    drawDogAnimation();
+  } else {
+    Keyboard.release(KEY_UP_ARROW);
+  }
+
+  if (buttonState5 == HIGH) {
+    Keyboard.press(KEY_RIGHT_ARROW);
+    drawDogAnimation();
+  } else {
+    Keyboard.release(KEY_RIGHT_ARROW);
+  }
+
+  if (buttonState6 == HIGH) {
+    Keyboard.press(KEY_END);
+    drawDogAnimation();
+  } else {
+    Keyboard.release(KEY_END);
+  }
+}
+
+int previousButtonState1 = HIGH;
+int previousButtonState2 = HIGH;
+int previousButtonState3 = HIGH;
+int previousButtonState4 = HIGH;
+void keyInfoMode(int buttonState1, int buttonState2, int buttonState3, int buttonState4, int buttonState5, int buttonState6) {
+  if ((buttonState1 != previousButtonState1) && (buttonState1 == HIGH)) {
+    Keyboard.print("Taj Bas Thafnh Huy");
+    drawDogAnimation();
+  }
+  previousButtonState1 = buttonState1;
+
+  if ((buttonState2 != previousButtonState2) && (buttonState2 == HIGH)) {
+    Keyboard.print("huytest@gmail.com");
+    drawDogAnimation();
+  }
+  previousButtonState2 = buttonState2;
+
+  if ((buttonState3 != previousButtonState3) && (buttonState3 == HIGH)) {
+    Keyboard.print("0987654321");
+    drawDogAnimation();
+  }
+  previousButtonState3 = buttonState3;
+
+  if ((buttonState4 != previousButtonState4) && (buttonState4 == HIGH)) {
+    Keyboard.print("24 Lee DDinhf Dwowng, Phwowfng Phwowcs Ninh, Quaajn Hair Chaau, TP DDaf Nawxng");
+    drawDogAnimation();
+  }
+  previousButtonState4 = buttonState4;
+
+  if (buttonState5 == HIGH) {
+    Keyboard.press(KEY_HOME);
+    drawDogAnimation();
+  } else {
+    Keyboard.release(KEY_HOME);
+  }
+
+  if (buttonState6 == HIGH) {
+    Keyboard.press(KEY_END);
+    drawDogAnimation();
   } else {
     Keyboard.release(KEY_END);
   }
