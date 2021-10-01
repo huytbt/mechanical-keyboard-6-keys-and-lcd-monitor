@@ -149,18 +149,22 @@ void loop() {
 
   if (buttonState6 == HIGH && buttonState1 == HIGH) {
     mode = MODE_DEFAULT;
+    drawDogAnimation();
     return;
   }
   if (buttonState6 == HIGH && buttonState2 == HIGH) {
     mode = MODE_GAME;
+    drawDogAnimation();
     return;
   }
   if (buttonState6 == HIGH && buttonState3 == HIGH) {
     mode = MODE_INFO;
+    drawDogAnimation();
     return;
   }
   if (buttonState6 == HIGH && buttonState4 == HIGH) {
     mode = MODE_MOUSE;
+    drawDogAnimation();
     return;
   }
 
