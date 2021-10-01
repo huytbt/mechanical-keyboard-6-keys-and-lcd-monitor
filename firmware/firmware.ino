@@ -138,7 +138,6 @@ void setup() {
     for(;;); // Don't proceed, loop forever
   }
 
-  drawDogAnimation();
 }
 
 void loop() {
@@ -151,25 +150,21 @@ void loop() {
 
   if (buttonState5 == HIGH && buttonState6 == HIGH && buttonState1 == HIGH) {
     mode = MODE_DEFAULT;
-    drawDogAnimation();
     releaseKeys();
     return;
   }
   if (buttonState5 == HIGH && buttonState6 == HIGH && buttonState2 == HIGH) {
     mode = MODE_GAME;
-    drawDogAnimation();
     releaseKeys();
     return;
   }
   if (buttonState5 == HIGH && buttonState6 == HIGH && buttonState3 == HIGH) {
     mode = MODE_INFO;
-    drawDogAnimation();
     releaseKeys();
     return;
   }
   if (buttonState5 == HIGH && buttonState6 == HIGH && buttonState4 == HIGH) {
     mode = MODE_MOUSE;
-    drawDogAnimation();
     releaseKeys();
     return;
   }
@@ -188,6 +183,7 @@ void loop() {
       keyMouseMode(buttonState1, buttonState2, buttonState3, buttonState4, buttonState5, buttonState6);
       break;
   }
+  drawDogAnimation();
 }
 
 void releaseKeys() {
@@ -202,7 +198,6 @@ void releaseKeys() {
 void keyDefaultMode(int buttonState1, int buttonState2, int buttonState3, int buttonState4, int buttonState5, int buttonState6) {
   if (buttonState1 == HIGH) {
     Keyboard.press(KEY_ESC);
-    drawDogAnimation();
   } else {
     Keyboard.release(KEY_ESC);
   }
@@ -211,7 +206,6 @@ void keyDefaultMode(int buttonState1, int buttonState2, int buttonState3, int bu
     Keyboard.press(KEY_LEFT_GUI);
     Keyboard.press(KEY_RIGHT_SHIFT);
     Keyboard.write('5');
-    drawDogAnimation();
   } else {
     Keyboard.release(KEY_LEFT_GUI);
     Keyboard.release(KEY_RIGHT_SHIFT);
@@ -219,28 +213,24 @@ void keyDefaultMode(int buttonState1, int buttonState2, int buttonState3, int bu
 
   if (buttonState3 == HIGH) {
     Keyboard.press(KEY_INSERT);
-    drawDogAnimation();
   } else {
     Keyboard.release(KEY_INSERT);
   }
 
   if (buttonState4 == HIGH) {
     Keyboard.press(KEY_DELETE);
-    drawDogAnimation();
   } else {
     Keyboard.release(KEY_DELETE);
   }
 
   if (buttonState5 == HIGH) {
     Keyboard.press(KEY_HOME);
-    drawDogAnimation();
   } else {
     Keyboard.release(KEY_HOME);
   }
 
   if (buttonState6 == HIGH) {
     Keyboard.press(KEY_END);
-    drawDogAnimation();
   } else {
     Keyboard.release(KEY_END);
   }
@@ -249,42 +239,36 @@ void keyDefaultMode(int buttonState1, int buttonState2, int buttonState3, int bu
 void keyGameMode(int buttonState1, int buttonState2, int buttonState3, int buttonState4, int buttonState5, int buttonState6) {
   if (buttonState1 == HIGH) {
     Keyboard.press(KEY_LEFT_ARROW);
-    drawDogAnimation();
   } else {
     Keyboard.release(KEY_LEFT_ARROW);
   }
 
   if (buttonState2 == HIGH) {
     Keyboard.press(KEY_HOME);
-    drawDogAnimation();
   } else {
     Keyboard.release(KEY_HOME);
   }
 
   if (buttonState3 == HIGH) {
     Keyboard.press(KEY_DOWN_ARROW);
-    drawDogAnimation();
   } else {
     Keyboard.release(KEY_DOWN_ARROW);
   }
 
   if (buttonState4 == HIGH) {
     Keyboard.press(KEY_UP_ARROW);
-    drawDogAnimation();
   } else {
     Keyboard.release(KEY_UP_ARROW);
   }
 
   if (buttonState5 == HIGH) {
     Keyboard.press(KEY_RIGHT_ARROW);
-    drawDogAnimation();
   } else {
     Keyboard.release(KEY_RIGHT_ARROW);
   }
 
   if (buttonState6 == HIGH) {
     Keyboard.press(KEY_END);
-    drawDogAnimation();
   } else {
     Keyboard.release(KEY_END);
   }
@@ -297,38 +281,32 @@ int previousButtonState4 = HIGH;
 void keyInfoMode(int buttonState1, int buttonState2, int buttonState3, int buttonState4, int buttonState5, int buttonState6) {
   if ((buttonState1 != previousButtonState1) && (buttonState1 == HIGH)) {
     Keyboard.print("Taj Bas Thafnh Huy");
-    drawDogAnimation();
   }
   previousButtonState1 = buttonState1;
 
   if ((buttonState2 != previousButtonState2) && (buttonState2 == HIGH)) {
     Keyboard.print("huytest@gmail.com");
-    drawDogAnimation();
   }
   previousButtonState2 = buttonState2;
 
   if ((buttonState3 != previousButtonState3) && (buttonState3 == HIGH)) {
     Keyboard.print("0987654321");
-    drawDogAnimation();
   }
   previousButtonState3 = buttonState3;
 
   if ((buttonState4 != previousButtonState4) && (buttonState4 == HIGH)) {
     Keyboard.print("24 Lee DDinhf Dwowng, Phwowfng Phwowcs Ninh, Quaajn Hair Chaau, TP DDaf Nawxng");
-    drawDogAnimation();
   }
   previousButtonState4 = buttonState4;
 
   if (buttonState5 == HIGH) {
     Keyboard.press(KEY_HOME);
-    drawDogAnimation();
   } else {
     Keyboard.release(KEY_HOME);
   }
 
   if (buttonState6 == HIGH) {
     Keyboard.press(KEY_END);
-    drawDogAnimation();
   } else {
     Keyboard.release(KEY_END);
   }
@@ -347,7 +325,6 @@ void keyMouseMode(int buttonState1, int buttonState2, int buttonState3, int butt
 
   int mousePress = MOUSE_LEFT;
   if (buttonState6 == HIGH) {
-    drawDogAnimation();
     mousePress = MOUSE_RIGHT;
   }
 
@@ -393,7 +370,6 @@ void keyMouseMode(int buttonState1, int buttonState2, int buttonState3, int butt
 
   if (hasPressed) {
     Mouse.move(mouseX, mouseY, 0);
-    drawDogAnimation();
   }
 
   delay(5);
