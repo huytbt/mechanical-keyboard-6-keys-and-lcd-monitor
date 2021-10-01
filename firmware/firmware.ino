@@ -77,25 +77,21 @@ void drawDogAnimation() {
   display.setCursor(0,0);             // Start at top-left corner
   switch (mode) {
     case MODE_DEFAULT:
-      display.println("Default");
-      display.println("Esc  PrtSc");
-      display.println("Ins  Del");
-      display.println("Home End");
+      display.println("NextWin PrtScr");
+      display.println("NextApp MissCtrl");
+      display.println("AppWins Fn");
       break;
     case MODE_GAME:
-      display.println("Game Mode");
-      display.println("Left  Home");
+      display.println("Left  Enter");
       display.println("Down  Up");
-      display.println("Right End");
+      display.println("Right Fn");
       break;
     case MODE_INFO:
-      display.println("Info Mode");
-      display.println("Name  Email");
-      display.println("Phone Addr");
-      display.println("Home  End");
+      display.println("Name   Email");
+      display.println("Phone  Addr");
+      display.println("UnLock Fn");
       break;
     case MODE_MOUSE:
-      display.println("Mouse Mode");
       display.println("Left  Press");
       display.println("Down  Up");
       display.println("Right Fn");
@@ -105,18 +101,21 @@ void drawDogAnimation() {
   display.display();
 }
 
-#define KEY_ESC           0xB1
-#define KEY_RIGHT_SHIFT   0x85
-#define KEY_RIGHT_ALT     0x86
+#define KEY_LEFT_CTRL     0x80
+#define KEY_LEFT_SHIFT    0x81
+#define KEY_LEFT_ALT      0x82
 #define KEY_LEFT_GUI      0x83
-#define KEY_HOME          0xD2
-#define KEY_END           0xD5
-#define KEY_INSERT        0xD1
-#define KEY_DELETE        0xD4
 #define KEY_UP_ARROW      0xDA
 #define KEY_DOWN_ARROW    0xD9
 #define KEY_LEFT_ARROW    0xD8
 #define KEY_RIGHT_ARROW   0xD7
+#define KEY_ESC           0xB1
+#define KEY_HOME          0xD2
+#define KEY_END           0xD5
+#define KEY_INSERT        0xD1
+#define KEY_DELETE        0xD4
+#define KEY_TAB           0xB3
+#define KEY_RETURN        0xB0
 
 void setup() {
   pinMode(buttonPin1, INPUT);
@@ -148,24 +147,20 @@ void loop() {
   int buttonState5 = digitalRead(buttonPin5);
   int buttonState6 = digitalRead(buttonPin6);
 
-  if (buttonState5 == HIGH && buttonState6 == HIGH && buttonState1 == HIGH) {
+  if (buttonState6 == HIGH && buttonState1 == HIGH) {
     mode = MODE_DEFAULT;
-    releaseKeys();
     return;
   }
-  if (buttonState5 == HIGH && buttonState6 == HIGH && buttonState2 == HIGH) {
+  if (buttonState6 == HIGH && buttonState2 == HIGH) {
     mode = MODE_GAME;
-    releaseKeys();
     return;
   }
-  if (buttonState5 == HIGH && buttonState6 == HIGH && buttonState3 == HIGH) {
+  if (buttonState6 == HIGH && buttonState3 == HIGH) {
     mode = MODE_INFO;
-    releaseKeys();
     return;
   }
-  if (buttonState5 == HIGH && buttonState6 == HIGH && buttonState4 == HIGH) {
+  if (buttonState6 == HIGH && buttonState4 == HIGH) {
     mode = MODE_MOUSE;
-    releaseKeys();
     return;
   }
 
@@ -186,57 +181,57 @@ void loop() {
   drawDogAnimation();
 }
 
-void releaseKeys() {
-  Keyboard.release(KEY_ESC);
-  Keyboard.release(KEY_HOME);
-  Keyboard.release(KEY_END);
-  Keyboard.release(KEY_RIGHT_ARROW);
-  Keyboard.release(KEY_DOWN_ARROW);
-  Keyboard.release(KEY_UP_ARROW);
-}
-
 void keyDefaultMode(int buttonState1, int buttonState2, int buttonState3, int buttonState4, int buttonState5, int buttonState6) {
+  // display.println("NextWin PrtScr");
+  // display.println("NextApp MissCtrl");
+  // display.println("AppWins Fn");
   if (buttonState1 == HIGH) {
-    Keyboard.press(KEY_ESC);
+    Keyboard.press(KEY_LEFT_GUI);
+    Keyboard.press('`');
+    delay(100);
+    Keyboard.release('`');
   } else {
-    Keyboard.release(KEY_ESC);
+    Keyboard.release(KEY_LEFT_GUI);
   }
 
   if (buttonState2 == HIGH) {
     Keyboard.press(KEY_LEFT_GUI);
-    Keyboard.press(KEY_RIGHT_SHIFT);
+    Keyboard.press(KEY_LEFT_SHIFT);
     Keyboard.write('5');
   } else {
     Keyboard.release(KEY_LEFT_GUI);
-    Keyboard.release(KEY_RIGHT_SHIFT);
+    Keyboard.release(KEY_LEFT_SHIFT);
   }
 
   if (buttonState3 == HIGH) {
-    Keyboard.press(KEY_INSERT);
+    Keyboard.press(KEY_LEFT_GUI);
+    Keyboard.press(KEY_TAB);
   } else {
-    Keyboard.release(KEY_INSERT);
+    Keyboard.release(KEY_TAB);
+    Keyboard.release(KEY_LEFT_GUI);
   }
 
   if (buttonState4 == HIGH) {
-    Keyboard.press(KEY_DELETE);
+    Keyboard.press(KEY_LEFT_CTRL);
+    Keyboard.press(KEY_UP_ARROW);
   } else {
-    Keyboard.release(KEY_DELETE);
+    Keyboard.release(KEY_UP_ARROW);
+    Keyboard.release(KEY_LEFT_CTRL);
   }
 
   if (buttonState5 == HIGH) {
-    Keyboard.press(KEY_HOME);
+    Keyboard.press(KEY_LEFT_CTRL);
+    Keyboard.press(KEY_DOWN_ARROW);
   } else {
-    Keyboard.release(KEY_HOME);
-  }
-
-  if (buttonState6 == HIGH) {
-    Keyboard.press(KEY_END);
-  } else {
-    Keyboard.release(KEY_END);
+    Keyboard.release(KEY_DOWN_ARROW);
+    Keyboard.release(KEY_LEFT_CTRL);
   }
 }
 
 void keyGameMode(int buttonState1, int buttonState2, int buttonState3, int buttonState4, int buttonState5, int buttonState6) {
+  // display.println("Left  Enter");
+  // display.println("Down  Up");
+  // display.println("Right Fn");
   if (buttonState1 == HIGH) {
     Keyboard.press(KEY_LEFT_ARROW);
   } else {
@@ -244,9 +239,9 @@ void keyGameMode(int buttonState1, int buttonState2, int buttonState3, int butto
   }
 
   if (buttonState2 == HIGH) {
-    Keyboard.press(KEY_HOME);
+    Keyboard.press(KEY_RETURN);
   } else {
-    Keyboard.release(KEY_HOME);
+    Keyboard.release(KEY_RETURN);
   }
 
   if (buttonState3 == HIGH) {
@@ -266,19 +261,17 @@ void keyGameMode(int buttonState1, int buttonState2, int buttonState3, int butto
   } else {
     Keyboard.release(KEY_RIGHT_ARROW);
   }
-
-  if (buttonState6 == HIGH) {
-    Keyboard.press(KEY_END);
-  } else {
-    Keyboard.release(KEY_END);
-  }
 }
 
 int previousButtonState1 = HIGH;
 int previousButtonState2 = HIGH;
 int previousButtonState3 = HIGH;
 int previousButtonState4 = HIGH;
+int previousButtonState5 = HIGH;
 void keyInfoMode(int buttonState1, int buttonState2, int buttonState3, int buttonState4, int buttonState5, int buttonState6) {
+  // display.println("Name   Email");
+  // display.println("Phone  Addr");
+  // display.println("UnLock Fn");
   if ((buttonState1 != previousButtonState1) && (buttonState1 == HIGH)) {
     Keyboard.print("Taj Bas Thafnh Huy");
   }
@@ -299,17 +292,10 @@ void keyInfoMode(int buttonState1, int buttonState2, int buttonState3, int butto
   }
   previousButtonState4 = buttonState4;
 
-  if (buttonState5 == HIGH) {
-    Keyboard.press(KEY_HOME);
-  } else {
-    Keyboard.release(KEY_HOME);
+  if ((buttonState5 != previousButtonState5) && (buttonState5 == HIGH)) {
+    Keyboard.print("qweQWE!@#");
   }
-
-  if (buttonState6 == HIGH) {
-    Keyboard.press(KEY_END);
-  } else {
-    Keyboard.release(KEY_END);
-  }
+  previousButtonState5 = buttonState5;
 }
 
 int mouseAcceleration = 0;
@@ -323,19 +309,14 @@ void keyMouseMode(int buttonState1, int buttonState2, int buttonState3, int butt
     hasPressed = true;
   }
 
-  int mousePress = MOUSE_LEFT;
-  if (buttonState6 == HIGH) {
-    mousePress = MOUSE_RIGHT;
-  }
-
   if (buttonState2 == HIGH) {
-    if (!Mouse.isPressed(mousePress)) {
-      Mouse.press(mousePress);
+    if (!Mouse.isPressed(MOUSE_LEFT)) {
+      Mouse.press(MOUSE_LEFT);
     }
     hasPressed = true;
   } else {
-    if (Mouse.isPressed(mousePress)) {
-      Mouse.release(mousePress);
+    if (Mouse.isPressed(MOUSE_LEFT)) {
+      Mouse.release(MOUSE_LEFT);
     }
   }
 
