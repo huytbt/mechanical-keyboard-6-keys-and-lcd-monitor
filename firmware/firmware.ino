@@ -297,7 +297,7 @@ void keyInfoMode(int buttonState1, int buttonState2, int buttonState3, int butto
   previousButtonState4 = buttonState4;
 
   if ((buttonState5 != previousButtonState5) && (buttonState5 == HIGH)) {
-    Keyboard.print("");
+    Keyboard.print("pass");
   }
   previousButtonState5 = buttonState5;
 }
